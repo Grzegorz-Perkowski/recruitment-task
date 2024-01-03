@@ -298,3 +298,68 @@ function register_book_genre_taxonomy() {
 }
 
 add_action( 'init', 'register_book_genre_taxonomy', 0 );
+
+function recent_book_title_shortcode() {
+	$args = array(
+		'post_type'      => 'books',
+		'posts_per_page' => 1,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	);
+
+	$recent_book = new WP_Query($args);
+
+	if ($recent_book->have_posts()) {
+		$recent_book->the_post();
+		$title = get_the_title();
+		wp_reset_postdata();
+		return $title;
+	}
+
+	return 'No recent books found.';
+}
+
+add_shortcode('recent_book_title', 'recent_book_title_shortcode');
+
+function books_by_genre_shortcode($atts) {
+	$atts = shortcode_atts(
+		array(
+			'genre' => 0,
+		),
+		$atts,
+		'books_by_genre'
+	);
+
+	$args = array(
+		'post_type'      => 'books',
+		'posts_per_page' => 5,
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'book-genre',
+				'field'    => 'term_id',
+				'terms'    => $atts['genre'],
+			),
+		),
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+	);
+
+	$books_query = new WP_Query($args);
+
+	if ($books_query->have_posts()) {
+		$output = '<ul>';
+		while ($books_query->have_posts()) {
+			$books_query->the_post();
+			$output .= '<li>' . get_the_title() . '</li>';
+		}
+		$output .= '</ul>';
+		wp_reset_postdata();
+		return $output;
+	}
+
+	return 'No books found for the specified genre.';
+}
+
+add_shortcode('books_by_genre', 'books_by_genre_shortcode');
+
+
