@@ -219,3 +219,82 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 	}
 
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+
+
+function register_books_post_type() {
+	$labels = array(
+		'name'                  => _x( 'Books', 'Post Type General Name', 'text_domain' ),
+		'singular_name'         => _x( 'Book', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( 'Library', 'text_domain' ),
+		'all_items'             => __( 'All Books', 'text_domain' ),
+		'add_new_item'          => __( 'Add New Book', 'text_domain' ),
+		'add_new'               => __( 'Add New', 'text_domain' ),
+		'edit_item'             => __( 'Edit Book', 'text_domain' ),
+		'update_item'           => __( 'Update Book', 'text_domain' ),
+		'view_item'             => __( 'View Book', 'text_domain' ),
+		'search_items'          => __( 'Search Books', 'text_domain' ),
+	);
+
+	$args = array(
+		'label'                 => __( 'Books', 'text_domain' ),
+		'description'           => __( 'Books Description', 'text_domain' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+		'hierarchical'          => false,
+		'public'                => true,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 5,
+		'menu_icon'             => 'dashicons-book-alt',
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => true,
+		'can_export'            => true,
+		'has_archive'           => true,
+		'exclude_from_search'   => false,
+		'publicly_queryable'    => true,
+		'capability_type'       => 'post',
+		'rewrite'               => array( 'slug' => 'library' ),
+	);
+
+	register_post_type( 'books', $args );
+}
+
+add_action( 'init', 'register_books_post_type', 0 );
+
+function register_book_genre_taxonomy() {
+	$labels = array(
+		'name'                       => _x( 'Genres', 'Taxonomy General Name', 'text_domain' ),
+		'singular_name'              => _x( 'Genre', 'Taxonomy Singular Name', 'text_domain' ),
+		'menu_name'                  => __( 'Genre', 'text_domain' ),
+		'all_items'                  => __( 'All Genres', 'text_domain' ),
+		'parent_item'                => __( 'Parent Genre', 'text_domain' ),
+		'parent_item_colon'          => __( 'Parent Genre:', 'text_domain' ),
+		'new_item_name'              => __( 'New Genre Name', 'text_domain' ),
+		'add_new_item'               => __( 'Add New Genre', 'text_domain' ),
+		'edit_item'                  => __( 'Edit Genre', 'text_domain' ),
+		'update_item'                => __( 'Update Genre', 'text_domain' ),
+		'view_item'                  => __( 'View Genre', 'text_domain' ),
+		'separate_items_with_commas' => __( 'Separate genres with commas', 'text_domain' ),
+		'add_or_remove_items'        => __( 'Add or remove genres', 'text_domain' ),
+		'choose_from_most_used'      => __( 'Choose from the most used genres', 'text_domain' ),
+		'popular_items'              => __( 'Popular Genres', 'text_domain' ),
+		'search_items'               => __( 'Search Genres', 'text_domain' ),
+		'not_found'                  => __( 'Not Found', 'text_domain' ),
+	);
+
+	$args = array(
+		'labels'                     => $labels,
+		'hierarchical'               => true,
+		'public'                     => true,
+		'show_ui'                    => true,
+		'show_in_menu'               => true,
+		'show_in_nav_menus'          => true,
+		'show_admin_column'          => true,
+		'query_var'                  => true,
+		'rewrite'                    => array( 'slug' => 'book-genre' ),
+	);
+
+	register_taxonomy( 'book-genre', array( 'books' ), $args );
+}
+
+add_action( 'init', 'register_book_genre_taxonomy', 0 );
