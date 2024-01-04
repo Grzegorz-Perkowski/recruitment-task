@@ -22,12 +22,12 @@ $query = new WP_Query($args);
 if ($query->have_posts()) :
 	while ($query->have_posts()) : $query->the_post(); ?>
 
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<header class="entry-header">
-				<h2 class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+		<article>
+			<header>
+				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 			</header>
 
-			<div class="entry-content">
+			<div>
 				<?php
 				if (has_post_thumbnail()) {
 					the_post_thumbnail('thumbnail');
